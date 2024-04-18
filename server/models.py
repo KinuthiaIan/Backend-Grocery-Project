@@ -11,14 +11,14 @@ metadata = MetaData(naming_convention={
 db = SQLAlchemy(metadata=metadata)
 
 # This is the users table
-class Users(db.Model, SerializerMixin):
+class User(db.Model, SerializerMixin):
     __tablename__ = "users"
 
     serialize_rules = ('-authenticate.users',)
 
     id = db.Column(db.Integer, primary_key=True)
 
-    first_name = db.Column(db.Integer)
+    first_name = db.Column(db.String)
     last_name = db.Column(db.String)
     email = db.Column(db.Integer, unique=True)
     password_hash = db.Column(db.String)
@@ -65,13 +65,14 @@ class Authenticate(db.Model, SerializerMixin):
         return f'<Authenticate {self.id}, {self.user_email}, {self.user_password}>'
 
 # The products table
-class Products(db.Model, SerializerMixin):
+class Product(db.Model, SerializerMixin):
     __tablename__ = 'products'
 
     serialize_rules = ('-authenticate.products',)
 
     id = db.Column(db.Integer, primary_key=True)
 
+    quantity = db.Column(db.String)
     price = db.Column(db.Float)
     image = db.Column(db.String)
     name = db.Column(db.String)
