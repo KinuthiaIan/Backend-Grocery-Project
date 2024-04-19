@@ -14,16 +14,17 @@ db = SQLAlchemy(metadata=metadata)
 class User(db.Model, SerializerMixin):
     __tablename__ = "users"
 
-    serialize_rules = ('-authenticate.users',)
+    serialize_rules = ('-products.user')
 
     id = db.Column(db.Integer, primary_key=True)
 
     first_name = db.Column(db.String)
     last_name = db.Column(db.String)
-    email = db.Column(db.Integer, unique=True)
+    email = db.Column(db.String, unique=True)
     password_hash = db.Column(db.String)
 
-    authenticate = db.relationship('Authenticate', back_populates='users')
+    products = db.relationship('Product', back_populates='user', cascade='all, delete-orphan')
+
 
     @validates('email')
     def validate_email(self, key, address):
@@ -42,33 +43,15 @@ class User(db.Model, SerializerMixin):
 
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
-    
+
     def __repr__(self):
-        return f'<Users {self.id}, {self.first_name}, {self.last_name}, {self.email}, {self.password_hash}>'
+        return f'<User {self.id}, {self.first_name}, {self.last_name}, {self.email}, {self.password_hash}>'
 
 # The authenticate table
-class Authenticate(db.Model, SerializerMixin):
-    __tablename__ = "authenticate"
-
-    serialize_rules = ('-users.authenticate', '-products.authenticate')
-
-    id = db.Column(db.Integer, primary_key=True)
-
-    user_email = db.Column(db.String, db.ForeignKey('users.email'))
-    user_password = db.Column(db.String, db.ForeignKey('users.password_hash'))
-
-    users = db.relationship('Users', back_populates='authenticate')
-
-    products = db.relationship('Products', back_populates='authenticate')
-
-    def __repr__(self):
-        return f'<Authenticate {self.id}, {self.user_email}, {self.user_password}>'
-
-# The products table
 class Product(db.Model, SerializerMixin):
     __tablename__ = 'products'
 
-    serialize_rules = ('-authenticate.products',)
+    serialize_rules = ('-user.products',)
 
     id = db.Column(db.Integer, primary_key=True)
 
@@ -78,20 +61,19 @@ class Product(db.Model, SerializerMixin):
     name = db.Column(db.String)
     category = db.Column(db.String)
     description = db.Column(db.String)
-    user_id = db.Column(db.Integer, db.ForeignKey('authenticate.id'))
+    users_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    authenticate = db.relationship('Authenticate', back_populates='products')
+    user = db.relationship('User', back_populates='products')
 
     @validates('category')
     def validate_category(self, key, category):
         if not category:
-            raise ValueError('Categroy is needed')
+            raise ValueError('Category is needed')
         
-        if category != 'Vegetables' or category != 'Fruits' or category != 'Dairy' or category != 'Bakery':
-            raise ValueError('Category shouold be either: Vegetables, Fruits, Dairy, Bakery')
+        if category not in ['vegetable', 'fruit', 'dairy', 'bakery']:
+            raise ValueError('Category should be either: Vegetables, Fruits, Dairy, Bakery')
         
         return category
 
-
     def __repr__(self):
-        return f'<Products {self.id}, {self.price}, {self.image}, {self.name}, {self.category}, {self.description}>'
+        return f'<Product {self.id}, {self.price}, {self.image}, {self.name}, {self.category}, {self.description}>'
