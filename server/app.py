@@ -28,17 +28,22 @@ class Products(Resource):
         return response
     
     # def post(self):
-    #     data = request.json()
+    #     data = request.get_json()
 
     #     new_product = Product(
-    #         quantity=data['quantity']
-    #         price=data['image']
-    #         name=data['name']
-    #         category=data['category']
-    #         description=data['description']
-
+    #         quantity=data['quantity'],
+    #         image=data['image'],
+    #         price=data['price'],
+    #         name=data['name'],
+    #         category=data['category'],
+    #         description=data['description'],
+    #         users_id=data['users_id']
     #     )
-    
+    #     db.session.add(new_product)
+    #     db.session.commit()
+
+    #     return make_response(new_product.to_dict(), 201)
+
 api.add_resource(Products, '/product')
 
 if __name__ == '__main__':
