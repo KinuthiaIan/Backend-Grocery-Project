@@ -22,7 +22,7 @@ def index():
 
 
     
-    
+
 
 class Products(Resource):
     def get(self):
@@ -36,9 +36,28 @@ class Products(Resource):
 
         return response
     
-
-
+    def post(self):
+        data=request.get_json()
+        
+        new_product = Product(
+            category=data['category'],
+            description=data['description'],
+            image=data['image'],
+            name=data['name'],
+            price=data['price'],
+            quantity=data['quantity']
+            )
+        
+        db.session.add(new_product)
+        db.session.commit()
+        
+        return make_response(new_product.to_dict(),201)
+    
+    
 api.add_resource(Products, '/products')
+
+
+
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
