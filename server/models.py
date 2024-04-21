@@ -14,7 +14,7 @@ db = SQLAlchemy(metadata=metadata)
 class User(db.Model, SerializerMixin):
     __tablename__ = "users"
 
-    serialize_rules = ('-products.user')
+    # serialize_rules = ('-products.user')
 
     id = db.Column(db.Integer, primary_key=True)
 
@@ -23,7 +23,7 @@ class User(db.Model, SerializerMixin):
     email = db.Column(db.String, unique=True)
     password_hash = db.Column(db.String)
 
-    products = db.relationship('Product', back_populates='user', cascade='all, delete-orphan')
+    # products = db.relationship('Product', back_populates='user', cascade='all, delete-orphan',lazy=True)
 
 
     @validates('email')
@@ -61,9 +61,9 @@ class Product(db.Model, SerializerMixin):
     name = db.Column(db.String)
     category = db.Column(db.String)
     description = db.Column(db.String)
-    users_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    # users_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    user = db.relationship('User', back_populates='products')
+    # user = db.relationship('User', back_populates='products',lazy=True)
 
     @validates('category')
     def validate_category(self, key, category):
