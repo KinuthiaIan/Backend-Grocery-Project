@@ -27,7 +27,7 @@ class Products(Resource):
 
         return response
     
-`    # def post(self):
+    # def post(self):
     #     data = request.get_json()
 
     #     new_product = Product(
