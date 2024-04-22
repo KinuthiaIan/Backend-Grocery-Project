@@ -1,4 +1,4 @@
-from flask import Flask, make_response, request
+from flask import Flask, jsonify, make_response, request
 from flask_migrate import Migrate
 from flask_restful import Api, Resource
 from models import db, User, Product
@@ -27,7 +27,7 @@ class Products(Resource):
 
         return response
     
-    # def post(self):
+`    # def post(self):
     #     data = request.get_json()
 
     #     new_product = Product(
@@ -42,7 +42,7 @@ class Products(Resource):
     #     db.session.add(new_product)
     #     db.session.commit()
 
-    #     return make_response(new_product.to_dict(), 201)
+    #     return make_response(jsonify(new_product.to_dict()), 201)`
 
 api.add_resource(Products, '/product')
 
